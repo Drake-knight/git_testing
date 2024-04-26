@@ -1,0 +1,4 @@
+To run
+1.Change the path of dae files in vidhyut.xacro and then run the launch file.
+
+teleop = ros2 run teleop_twist_keyboard teleop_twist_keyboard

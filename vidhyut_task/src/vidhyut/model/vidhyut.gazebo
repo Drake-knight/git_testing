@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<robot>
+<gazebo reference="body_link">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel1_link">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="wheel2_link">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="caster_link">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="caster_link2">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+<gazebo reference="camera">
+<mu1>0.2</mu1>
+<mu2>0.2</mu2>
+</gazebo>
+
+
+<gazebo>
+<plugin name='control' filename='libgazebo_ros_diff_drive.so'>
+
+    <ros>
+        <namespace> </namespace>
+    </ros>
+
+    <num_wheel_pairs>1</num_wheel_pairs>
+
+    <left_joint>wheel2_joint</left_joint>
+    <right_joint>wheel1_joint</right_joint>
+
+    <wheel_seperation>0.56</wheel_seperation>
+
+    <wheel_diameter>${wheel_link_radius}</wheel_diameter>
+
+    <max_wheel_torque>1000</max_wheel_torque>
+    <max_wheel_acceleration>5.0</max_wheel_acceleration>
+
+    <commandTopic>cmd_vel</commandTopic>
+    <odometryTopic>odom</odometryTopic>
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <publish_wheel_tf>true</publish_wheel_tf>
+
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_footprint</robot_base_frame>
+       <publishWheelJointState>true</publishWheelJointState>
+    </plugin>
+</gazebo>
+
+ <gazebo reference="camera">
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>rrbot/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+</robot>

@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<robot name="vidhyut" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:property name="robot_x" value="0.56" />
+<xacro:property name="robot_y" value="1.0" />
+<xacro:property name="robot_z" value="1.5" />
+
+<xacro:property name="wheel_link_radius" value="0.20" />
+<xacro:property name="wheel_link_length" value="0.1" />
+
+<xacro:property name="pi_const" value="3.14159265" />
+
+<xacro:property name="body_mass" value="5000" />
+
+<xacro:property name="wheel_mass" value="1000" />
+
+<xacro:property name="Inertia_x_wheel"  value="${0.5*wheel_mass * wheel_link_radius * wheel_link_radius}" />
+
+<xacro:property name="Inertia_wheel_y_and_z" 
+    value="${wheel_mass*(wheel_link_radius*wheel_link_radius)/4.0}" />
+
+<xacro:macro name="inertia_wheel">
+    <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <mass value="${wheel_mass}" />
+    <inertia ixx="${Inertia_x_wheel}" ixy="0.0" ixz="0.0" iyy="${Inertia_wheel_y_and_z}" iyz="0.0" izz="${Inertia_wheel_y_and_z}" />
+    </inertial>
+</xacro:macro>
+
+
+
+<xacro:include filename="$(find vidhyut)/model/vidhyut.gazebo" />
+
+
+<link name="dummy">
+</link>
+<joint name="dummy_joint" type="fixed">
+    <parent link="dummy" />
+    <child link="body_link" />
+</joint>
+
+<link name="body_link">
+    <visual>
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_bot.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    </visual>
+
+    <collision>
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_bot.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    </collision>
+
+    <inertial>
+        <origin xyz="-0.28 -0.03 0" rpy="0 0 0" />
+        <mass value="${body_mass}" />
+    <inertia 
+    ixx="${(1/12)*body_mass*(robot_y*robot_y + robot_z*robot_z)}"
+    ixy="0.0" ixz="0.0"
+    iyy="${(1/12)*body_mass*(robot_x*robot_x + robot_z*robot_z)}"
+    iyz="0.0"
+    izz="${(1/12)*body_mass*(robot_y*robot_y + robot_x*robot_x)}" />
+    </inertial>
+</link>
+
+
+<joint name="wheel1_joint" type="continuous">
+    <parent link="body_link" />
+    <child link="wheel1_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="1000" velocity="1000" />
+    <dynamics damping="1.0" friction="1.0" />
+</joint>
+
+<link name="wheel1_link">
+    <visual>
+         <origin xyz="0 0 0" rpy="1.570795 0 0" />
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_wheel.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    </visual>
+
+    <collision>
+         <origin xyz="0 0 0" rpy="1.570795 0 0" />
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_wheel.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    </collision>
+
+    <xacro:inertia_wheel />
+</link>
+
+
+<joint name="wheel2_joint" type="continuous">
+    <parent link="body_link" />
+    <child link="wheel2_link" />
+    <origin xyz="-0.56 0 0" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="1000" velocity="1000" />
+    <dynamics damping="1.0" friction="1.0" />
+</joint>
+
+<link name="wheel2_link">
+    <visual>
+         <origin xyz="0 0 0" rpy="1.570795 0 0" />
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_wheel.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    </visual>
+
+    <collision>
+         <origin xyz="0 0 0" rpy="1.570795 0 0" />
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/igvc_wheel.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+    </collision>
+
+    <xacro:inertia_wheel />
+</link>
+
+<joint name="caster_joint" type="fixed">
+    <parent link="body_link" />
+    <child link="caster_link" />
+    <origin xyz="-0.35 0.3 -0.05" rpy="0 0 0" />
+</joint>
+
+<link name="caster_link">
+    <inertial>
+        <mass value="1000" />
+        <inertia 
+            ixx="${0.4*1000*0.07*0.07}" 
+            ixy="0.0" 
+            ixz="0.0" 
+            iyy="${0.4*1000*0.07*0.07}" 
+            iyz="0.0" 
+            izz="${0.4*1000*0.07*0.07}" />
+    </inertial>
+    <visual>
+        <geometry>
+            <sphere radius="0.07"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+             <sphere radius="0.07"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+</link>
+
+<joint name="caster_joint2" type="fixed">
+    <parent link="body_link" />
+    <child link="caster_link2" />
+    <origin xyz="-0.35 -0.4 -0.05" rpy="0 0 0" />
+</joint>
+
+<link name="caster_link2">
+    <inertial>
+        <mass value="1000" />
+        <inertia 
+            ixx="${0.4*1000*0.07*0.07}" 
+            ixy="0.0" 
+            ixz="0.0" 
+            iyy="${0.4*1000*0.07*0.07}" 
+            iyz="0.0" 
+            izz="${0.4*1000*0.07*0.07}" />
+    </inertial>
+    <visual>
+        <geometry>
+            <sphere radius="0.07"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+             <sphere radius="0.07"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+</link>
+
+
+
+<joint name="joint_camera" type="fixed">
+    <parent link="body_link"/>
+    <child link="camera"/>
+    <origin xyz="-0.187 -0.18 1.0" rpy="0 0 -1.5708"/> 
+</joint>
+
+<link name="camera">
+    <visual>
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/zed2i.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+        <geometry>
+            <mesh filename="/home/vishal/Desktop/git_testing/vidhyut_task/src/vidhyut/dae_files/zed2i.dae" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 -1.57 0"/>
+    </collision>
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1e-50"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+</link>
+
+
+
+</robot>
